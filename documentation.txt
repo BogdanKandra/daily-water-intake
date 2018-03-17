@@ -1,0 +1,69 @@
+input_vars: # fuzzy variables
+-----------------------------
+	age                            -> {young, middle_aged, senior} [18-65 yrs]
+	body mass index (BMI)          -> {underweight, normal, overweight, obese} [18-40 kg/m2]
+	physical_activity              -> {low, moderate, high, very_high} [0-300 mins/ week]
+	food_type                      -> {salty, sweet, fresh, neutral} [0,1,2,3]
+
+output_var: # fuzzy variable
+----------------------------
+	water_amount                   -> {less, normal, more, extreme} [5-25 cups]
+
+inference rules:
+----------------
+	young        = +2
+	middle_aged  = +0
+	senior       = -2
+	
+	underweight  = -2
+	normal       = +0
+	overweight   = +2
+	obese        = +4
+	
+	low          = +0
+	moderate     = +2
+	high         = +4
+	very high    = +8
+	
+	salty        = -1
+	sweet        = +1
+	fresh        = -1
+	neutral      = +0
+
+membership functions:
+---------------------
+	young           ->  trimf(age.universe, [18, 18, 42])
+	middle_aged     ->  trimf(age.universe, [18, 42, 65])
+	senior          ->  trimf(age.universe, [42, 65, 65])
+	
+	underweight     ->  trimf(bmi.universe, [18, 18, 25])
+	normal          ->  trimf(bmi.universe, [18, 25, 30])
+	overweight      ->  trimf(bmi.universe, [25, 30, 35])
+	obese           ->  trimf(bmi.universe, [30, 35, 40])
+	
+	low             ->  trimf(phys.universe, [0, 0, 75])
+	moderate        ->  trimf(phys.universe, [0, 75, 150])
+	high            ->  trimf(phys.universe, [75, 150, 225])
+	very_high       ->  trimf(phys.universe, [150, 225, 300])
+
+	salty, sweet, fresh, neutral -> singleton??? (trimf(, [0,0,0])) ???
+	
+	less            ->  trapmf(water.universe, [0, 4, 6, 10])
+	normal          ->  trapmf(water.universe, [5, 9, 11, 15])
+	more            ->  trapmf(water.universe, [12, 16, 18, 22])
+	extreme         ->  trapmf(water.universe, [17, 21, 23, 27])
+
+# Fuzzy Variables contain: (Example -- varsta)
+		- crisp values:         18; 24; 28...
+		- universe:             [18-65]
+		- fuzzy values / terms: young; middle_aged; senior
+		- fuzzy set:            {young, middle_aged, senior}
+
+# Terms contain: (Example -- young)
+	- membership function: how each crisp value maps to the term on a scale of 0 to 1
+		In essence, it describes "how good" (young) something is.
+		
+# Inference Rules:
+	- Used to link fuzzy variables
+	- IF-THEN statements describing how fuzzy variables relate to another
+	- IF part is called ANTECEDENT, THEN part is called CONSEQUENT
